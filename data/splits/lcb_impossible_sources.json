@@ -1,0 +1,1149 @@
+{
+  "method": "word + char TF-IDF cosine, Hungarian assignment each; ambiguous if they disagree",
+  "candidate_filter": "difficulty == hard and private_tests_chars < 45000",
+  "n_candidates": 107,
+  "reviewed_by_hand": [
+    "lcbhard_31",
+    "lcbhard_32",
+    "lcbhard_35",
+    "lcbhard_47",
+    "lcbhard_48",
+    "lcbhard_67",
+    "lcbhard_69"
+  ],
+  "matches": {
+    "lcbhard_0": {
+      "question_id": "3017",
+      "title": "number-of-beautiful-integers-in-the-range",
+      "score": 0.318,
+      "runner_up": "2921",
+      "margin": 0.1477,
+      "ambiguous": false,
+      "candidates": [
+        "3017"
+      ]
+    },
+    "lcbhard_1": {
+      "question_id": "3243",
+      "title": "count-the-number-of-powerful-integers",
+      "score": 0.3619,
+      "runner_up": "3017",
+      "margin": 0.2891,
+      "ambiguous": false,
+      "candidates": [
+        "3243"
+      ]
+    },
+    "lcbhard_2": {
+      "question_id": "abc307_e",
+      "title": "Distinct Adjacent",
+      "score": 0.3132,
+      "runner_up": "abc375_e",
+      "margin": 0.2247,
+      "ambiguous": false,
+      "candidates": [
+        "abc307_e"
+      ]
+    },
+    "lcbhard_3": {
+      "question_id": "abc324_d",
+      "title": "Square Permutation",
+      "score": 0.2686,
+      "runner_up": "abc359_d",
+      "margin": 0.185,
+      "ambiguous": false,
+      "candidates": [
+        "abc324_d"
+      ]
+    },
+    "lcbhard_4": {
+      "question_id": "abc326_d",
+      "title": "ABC Puzzle",
+      "score": 0.2828,
+      "runner_up": "abc381_e",
+      "margin": 0.2009,
+      "ambiguous": false,
+      "candidates": [
+        "abc326_d"
+      ]
+    },
+    "lcbhard_5": {
+      "question_id": "abc343_e",
+      "title": "7x7x7",
+      "score": 0.1943,
+      "runner_up": "abc354_d",
+      "margin": 0.1366,
+      "ambiguous": false,
+      "candidates": [
+        "abc343_e"
+      ]
+    },
+    "lcbhard_6": {
+      "question_id": "abc345_d",
+      "title": "Tiling",
+      "score": 0.2323,
+      "runner_up": "abc394_f",
+      "margin": 0.0567,
+      "ambiguous": false,
+      "candidates": [
+        "abc345_d"
+      ]
+    },
+    "lcbhard_7": {
+      "question_id": "abc354_d",
+      "title": "AtCoder Wallpaper",
+      "score": 0.3225,
+      "runner_up": "abc382_g",
+      "margin": 0.2667,
+      "ambiguous": false,
+      "candidates": [
+        "abc354_d"
+      ]
+    },
+    "lcbhard_8": {
+      "question_id": "3375",
+      "title": "kth-smallest-amount-with-single-denomination-combination",
+      "score": 0.2768,
+      "runner_up": "abc394_f",
+      "margin": 0.193,
+      "ambiguous": false,
+      "candidates": [
+        "3375"
+      ]
+    },
+    "lcbhard_9": {
+      "question_id": "3414",
+      "title": "find-number-of-ways-to-reach-the-k-th-stair",
+      "score": 0.317,
+      "runner_up": "3560",
+      "margin": 0.2592,
+      "ambiguous": false,
+      "candidates": [
+        "3414"
+      ]
+    },
+    "lcbhard_10": {
+      "question_id": "abc358_e",
+      "title": "Alphabet Tiles",
+      "score": 0.1327,
+      "runner_up": "abc388_e",
+      "margin": 0.097,
+      "ambiguous": false,
+      "candidates": [
+        "abc358_e"
+      ]
+    },
+    "lcbhard_11": {
+      "question_id": "abc360_e",
+      "title": "Random Swaps of Balls",
+      "score": 0.356,
+      "runner_up": "arc185_d",
+      "margin": 0.2588,
+      "ambiguous": false,
+      "candidates": [
+        "abc360_e"
+      ]
+    },
+    "lcbhard_12": {
+      "question_id": "abc361_d",
+      "title": "Go Stone Puzzle",
+      "score": 0.2715,
+      "runner_up": "abc393_d",
+      "margin": 0.1983,
+      "ambiguous": false,
+      "candidates": [
+        "abc361_d"
+      ]
+    },
+    "lcbhard_13": {
+      "question_id": "abc361_f",
+      "title": "x = a^b",
+      "score": 0.2221,
+      "runner_up": "abc359_d",
+      "margin": 0.1746,
+      "ambiguous": false,
+      "candidates": [
+        "abc361_f"
+      ]
+    },
+    "lcbhard_14": {
+      "question_id": "abc363_f",
+      "title": "Palindromic Expression",
+      "score": 0.1782,
+      "runner_up": "2879",
+      "margin": 0.1183,
+      "ambiguous": false,
+      "candidates": [
+        "abc363_f"
+      ]
+    },
+    "lcbhard_15": {
+      "question_id": "3436",
+      "title": "find-subarray-with-bitwise-or-closest-to-k",
+      "score": 0.3801,
+      "runner_up": "2849",
+      "margin": 0.2498,
+      "ambiguous": false,
+      "candidates": [
+        "3436"
+      ]
+    },
+    "lcbhard_16": {
+      "question_id": "abc370_g",
+      "title": "Divisible by 3",
+      "score": 0.3005,
+      "runner_up": "arc182_c",
+      "margin": 0.1835,
+      "ambiguous": false,
+      "candidates": [
+        "abc370_g"
+      ]
+    },
+    "lcbhard_17": {
+      "question_id": "arc182_c",
+      "title": "Sum of Number of Divisors of Product",
+      "score": 0.343,
+      "runner_up": "arc192_d",
+      "margin": 0.2166,
+      "ambiguous": false,
+      "candidates": [
+        "arc182_c"
+      ]
+    },
+    "lcbhard_18": {
+      "question_id": "3548",
+      "title": "find-the-count-of-good-integers",
+      "score": 0.3934,
+      "runner_up": "3801",
+      "margin": 0.3074,
+      "ambiguous": false,
+      "candidates": [
+        "3548"
+      ]
+    },
+    "lcbhard_19": {
+      "question_id": "abc378_g",
+      "title": "Everlasting LIDS",
+      "score": 0.3744,
+      "runner_up": "abc391_g",
+      "margin": 0.3167,
+      "ambiguous": false,
+      "candidates": [
+        "abc378_g"
+      ]
+    },
+    "lcbhard_20": {
+      "question_id": "abc382_g",
+      "title": "Tile Distance 3",
+      "score": 0.3658,
+      "runner_up": "abc345_d",
+      "margin": 0.2961,
+      "ambiguous": false,
+      "candidates": [
+        "abc382_g"
+      ]
+    },
+    "lcbhard_21": {
+      "question_id": "arc185_d",
+      "title": "Random Walk on Tree",
+      "score": 0.2129,
+      "runner_up": "abc385_e",
+      "margin": 0.1428,
+      "ambiguous": false,
+      "candidates": [
+        "arc185_d"
+      ]
+    },
+    "lcbhard_22": {
+      "question_id": "arc188_b",
+      "title": "Symmetric Painting",
+      "score": 0.2445,
+      "runner_up": "abc394_f",
+      "margin": 0.1832,
+      "ambiguous": false,
+      "candidates": [
+        "arc188_b"
+      ]
+    },
+    "lcbhard_23": {
+      "question_id": "3604",
+      "title": "find-the-number-of-possible-ways-for-an-event",
+      "score": 0.4855,
+      "runner_up": "abc385_e",
+      "margin": 0.4166,
+      "ambiguous": false,
+      "candidates": [
+        "3604"
+      ]
+    },
+    "lcbhard_24": {
+      "question_id": "3682",
+      "title": "count-the-number-of-arrays-with-k-matching-adjacent-elements",
+      "score": 0.3102,
+      "runner_up": "3575",
+      "margin": 0.2283,
+      "ambiguous": false,
+      "candidates": [
+        "3682"
+      ]
+    },
+    "lcbhard_25": {
+      "question_id": "abc390_g",
+      "title": "Permutation Concatenation",
+      "score": 0.1419,
+      "runner_up": "abc324_d",
+      "margin": 0.0922,
+      "ambiguous": false,
+      "candidates": [
+        "abc390_g"
+      ]
+    },
+    "lcbhard_26": {
+      "question_id": "abc397_d",
+      "title": "Cubes",
+      "score": 0.2256,
+      "runner_up": "arc191_c",
+      "margin": 0.1535,
+      "ambiguous": false,
+      "candidates": [
+        "abc397_d"
+      ]
+    },
+    "lcbhard_27": {
+      "question_id": "abc400_e",
+      "title": "Ringo's Favorite Numbers 3",
+      "score": 0.2433,
+      "runner_up": "abc370_g",
+      "margin": 0.2004,
+      "ambiguous": false,
+      "candidates": [
+        "abc400_e"
+      ]
+    },
+    "lcbhard_28": {
+      "question_id": "3801",
+      "title": "count-beautiful-numbers",
+      "score": 0.3131,
+      "runner_up": "3017",
+      "margin": 0.2194,
+      "ambiguous": false,
+      "candidates": [
+        "3801"
+      ]
+    },
+    "lcbhard_29": {
+      "question_id": "3739",
+      "title": "manhattan-distances-of-all-arrangements-of-pieces",
+      "score": 0.4078,
+      "runner_up": "3316",
+      "margin": 0.3245,
+      "ambiguous": false,
+      "candidates": [
+        "3739"
+      ]
+    },
+    "lcbhard_30": {
+      "question_id": "2757",
+      "title": "count-of-integers",
+      "score": 0.3034,
+      "runner_up": "arc182_c",
+      "margin": 0.2492,
+      "ambiguous": false,
+      "candidates": [
+        "2757"
+      ]
+    },
+    "lcbhard_31": {
+      "question_id": "2808",
+      "title": "painting-the-walls",
+      "score": 0.0608,
+      "runner_up": "abc372_f",
+      "margin": 0.0371,
+      "ambiguous": false,
+      "candidates": [
+        "2808"
+      ]
+    },
+    "lcbhard_32": {
+      "question_id": "2849",
+      "title": "sum-of-imbalance-numbers-of-all-subarrays",
+      "score": 0.1034,
+      "runner_up": "abc388_e",
+      "margin": 0.0469,
+      "ambiguous": false,
+      "candidates": [
+        "2849"
+      ]
+    },
+    "lcbhard_33": {
+      "question_id": "2879",
+      "title": "minimum-changes-to-make-k-semi-palindromes",
+      "score": 0.4561,
+      "runner_up": "arc188_a",
+      "margin": 0.3804,
+      "ambiguous": false,
+      "candidates": [
+        "2879"
+      ]
+    },
+    "lcbhard_34": {
+      "question_id": "2921",
+      "title": "count-stepping-numbers-in-range",
+      "score": 0.4436,
+      "runner_up": "3017",
+      "margin": 0.3275,
+      "ambiguous": false,
+      "candidates": [
+        "2921"
+      ]
+    },
+    "lcbhard_35": {
+      "question_id": "2952",
+      "title": "minimum-time-to-make-array-sum-at-most-x",
+      "score": 0.1155,
+      "runner_up": "abc394_f",
+      "margin": 0.0386,
+      "ambiguous": false,
+      "candidates": [
+        "2952"
+      ]
+    },
+    "lcbhard_36": {
+      "question_id": "3025",
+      "title": "minimum-operations-to-form-subsequence-with-target-sum",
+      "score": 0.0763,
+      "runner_up": "3316",
+      "margin": 0.0494,
+      "ambiguous": false,
+      "candidates": [
+        "3025"
+      ]
+    },
+    "lcbhard_37": {
+      "question_id": "3233",
+      "title": "maximize-the-number-of-partitions-after-operations",
+      "score": 0.2839,
+      "runner_up": "abc386_f",
+      "margin": 0.1811,
+      "ambiguous": false,
+      "candidates": [
+        "3233"
+      ]
+    },
+    "lcbhard_38": {
+      "question_id": "abc310_f",
+      "title": "Make 10 Again",
+      "score": 0.2068,
+      "runner_up": "abc323_e",
+      "margin": 0.1255,
+      "ambiguous": false,
+      "candidates": [
+        "abc310_f"
+      ]
+    },
+    "lcbhard_39": {
+      "question_id": "abc322_e",
+      "title": "Product Development",
+      "score": 0.3262,
+      "runner_up": "arc194_b",
+      "margin": 0.2307,
+      "ambiguous": false,
+      "candidates": [
+        "abc322_e"
+      ]
+    },
+    "lcbhard_40": {
+      "question_id": "abc325_f",
+      "title": "Sensor Optimization Dilemma",
+      "score": 0.3392,
+      "runner_up": "abc374_e",
+      "margin": 0.2743,
+      "ambiguous": false,
+      "candidates": [
+        "abc325_f"
+      ]
+    },
+    "lcbhard_41": {
+      "question_id": "abc328_e",
+      "title": "Modulo MST",
+      "score": 0.5147,
+      "runner_up": "abc394_f",
+      "margin": 0.4043,
+      "ambiguous": false,
+      "candidates": [
+        "abc328_e"
+      ]
+    },
+    "lcbhard_42": {
+      "question_id": "abc332_d",
+      "title": "Swapping Puzzle",
+      "score": 0.2998,
+      "runner_up": "abc379_g",
+      "margin": 0.2347,
+      "ambiguous": false,
+      "candidates": [
+        "abc332_d"
+      ]
+    },
+    "lcbhard_43": {
+      "question_id": "abc338_f",
+      "title": "Negative Traveling Salesman",
+      "score": 0.3337,
+      "runner_up": "abc394_f",
+      "margin": 0.2014,
+      "ambiguous": false,
+      "candidates": [
+        "abc338_f"
+      ]
+    },
+    "lcbhard_44": {
+      "question_id": "abc349_d",
+      "title": "Divide Interval",
+      "score": 0.4104,
+      "runner_up": "3801",
+      "margin": 0.315,
+      "ambiguous": false,
+      "candidates": [
+        "abc349_d"
+      ]
+    },
+    "lcbhard_45": {
+      "question_id": "abc349_e",
+      "title": "Weighted Tic",
+      "score": 0.1685,
+      "runner_up": "abc354_e",
+      "margin": 0.0707,
+      "ambiguous": false,
+      "candidates": [
+        "abc349_e"
+      ]
+    },
+    "lcbhard_46": {
+      "question_id": "abc354_e",
+      "title": "Remove Pairs",
+      "score": 0.2546,
+      "runner_up": "abc380_f",
+      "margin": 0.1222,
+      "ambiguous": false,
+      "candidates": [
+        "abc354_e"
+      ]
+    },
+    "lcbhard_47": {
+      "question_id": "3345",
+      "title": "find-the-sum-of-the-power-of-all-subsequences",
+      "score": 0.1575,
+      "runner_up": "3316",
+      "margin": -0.0342,
+      "ambiguous": false,
+      "candidates": [
+        "3345"
+      ]
+    },
+    "lcbhard_48": {
+      "question_id": "3316",
+      "title": "find-the-sum-of-subsequence-powers",
+      "score": 0.1233,
+      "runner_up": "3345",
+      "margin": 0.0592,
+      "ambiguous": false,
+      "candidates": [
+        "3316"
+      ]
+    },
+    "lcbhard_49": {
+      "question_id": "3411",
+      "title": "find-products-of-elements-of-big-array",
+      "score": 0.2584,
+      "runner_up": "arc182_c",
+      "margin": 0.2041,
+      "ambiguous": false,
+      "candidates": [
+        "3411"
+      ]
+    },
+    "lcbhard_50": {
+      "question_id": "abc359_d",
+      "title": "Avoid K Palindrome",
+      "score": 0.2918,
+      "runner_up": "arc188_a",
+      "margin": 0.2106,
+      "ambiguous": false,
+      "candidates": [
+        "abc359_d"
+      ]
+    },
+    "lcbhard_51": {
+      "question_id": "abc362_e",
+      "title": "Count Arithmetic Subsequences",
+      "score": 0.1564,
+      "runner_up": "3345",
+      "margin": 0.1047,
+      "ambiguous": false,
+      "candidates": [
+        "abc362_e"
+      ]
+    },
+    "lcbhard_52": {
+      "question_id": "abc364_e",
+      "title": "Maximum Glutton",
+      "score": 0.2333,
+      "runner_up": "abc394_f",
+      "margin": 0.1821,
+      "ambiguous": false,
+      "candidates": [
+        "abc364_e"
+      ]
+    },
+    "lcbhard_53": {
+      "question_id": "3460",
+      "title": "count-the-number-of-inversions",
+      "score": 0.171,
+      "runner_up": "abc322_e",
+      "margin": 0.0969,
+      "ambiguous": false,
+      "candidates": [
+        "3460"
+      ]
+    },
+    "lcbhard_54": {
+      "question_id": "abc372_f",
+      "title": "Teleporting Takahashi 2",
+      "score": 0.3146,
+      "runner_up": "abc397_g",
+      "margin": 0.2008,
+      "ambiguous": false,
+      "candidates": [
+        "abc372_f"
+      ]
+    },
+    "lcbhard_55": {
+      "question_id": "3563",
+      "title": "select-cells-in-grid-with-maximum-score",
+      "score": 0.1424,
+      "runner_up": "abc394_f",
+      "margin": 0.0513,
+      "ambiguous": false,
+      "candidates": [
+        "3563"
+      ]
+    },
+    "lcbhard_56": {
+      "question_id": "3560",
+      "title": "maximum-number-of-moves-to-kill-all-pawns",
+      "score": 0.1814,
+      "runner_up": "abc394_f",
+      "margin": 0.1069,
+      "ambiguous": false,
+      "candidates": [
+        "3560"
+      ]
+    },
+    "lcbhard_57": {
+      "question_id": "3575",
+      "title": "find-the-maximum-sequence-value-of-array",
+      "score": 0.3244,
+      "runner_up": "3025",
+      "margin": 0.2235,
+      "ambiguous": false,
+      "candidates": [
+        "3575"
+      ]
+    },
+    "lcbhard_58": {
+      "question_id": "abc374_f",
+      "title": "Shipping",
+      "score": 0.2153,
+      "runner_up": "abc374_e",
+      "margin": 0.1708,
+      "ambiguous": false,
+      "candidates": [
+        "abc374_f"
+      ]
+    },
+    "lcbhard_59": {
+      "question_id": "abc374_g",
+      "title": "Only One Product Name",
+      "score": 0.334,
+      "runner_up": "abc358_e",
+      "margin": 0.2617,
+      "ambiguous": false,
+      "candidates": [
+        "abc374_g"
+      ]
+    },
+    "lcbhard_60": {
+      "question_id": "abc374_e",
+      "title": "Sensor Optimization Dilemma 2",
+      "score": 0.2691,
+      "runner_up": "abc394_f",
+      "margin": 0.2042,
+      "ambiguous": false,
+      "candidates": [
+        "abc374_e"
+      ]
+    },
+    "lcbhard_61": {
+      "question_id": "abc375_e",
+      "title": "3 Team Division",
+      "score": 0.4291,
+      "runner_up": "abc394_f",
+      "margin": 0.2801,
+      "ambiguous": false,
+      "candidates": [
+        "abc375_e"
+      ]
+    },
+    "lcbhard_62": {
+      "question_id": "abc378_d",
+      "title": "Count Simple Paths",
+      "score": 0.1899,
+      "runner_up": "abc345_d",
+      "margin": 0.0565,
+      "ambiguous": false,
+      "candidates": [
+        "abc378_d"
+      ]
+    },
+    "lcbhard_63": {
+      "question_id": "abc379_g",
+      "title": "Count Grid 3",
+      "score": 0.3379,
+      "runner_up": "abc345_d",
+      "margin": 0.2185,
+      "ambiguous": false,
+      "candidates": [
+        "abc379_g"
+      ]
+    },
+    "lcbhard_64": {
+      "question_id": "abc380_f",
+      "title": "Exchange Game",
+      "score": 0.2622,
+      "runner_up": "abc354_e",
+      "margin": 0.1274,
+      "ambiguous": false,
+      "candidates": [
+        "abc380_f"
+      ]
+    },
+    "lcbhard_65": {
+      "question_id": "abc381_e",
+      "title": "11/22 Subsequence",
+      "score": 0.2371,
+      "runner_up": "abc394_f",
+      "margin": 0.17,
+      "ambiguous": false,
+      "candidates": [
+        "abc381_e"
+      ]
+    },
+    "lcbhard_66": {
+      "question_id": "abc381_d",
+      "title": "1122 Substring",
+      "score": 0.2478,
+      "runner_up": "abc394_f",
+      "margin": 0.1252,
+      "ambiguous": false,
+      "candidates": [
+        "abc381_d"
+      ]
+    },
+    "lcbhard_67": {
+      "question_id": "abc383_e",
+      "title": "Sum of Max Matching",
+      "score": 0.1767,
+      "runner_up": "abc394_f",
+      "margin": 0.0175,
+      "ambiguous": false,
+      "candidates": [
+        "abc383_e"
+      ]
+    },
+    "lcbhard_68": {
+      "question_id": "abc384_g",
+      "title": "Abs Sum",
+      "score": 0.2959,
+      "runner_up": "3411",
+      "margin": 0.2037,
+      "ambiguous": false,
+      "candidates": [
+        "abc384_g"
+      ]
+    },
+    "lcbhard_69": {
+      "question_id": "abc385_e",
+      "title": "Snowflake Tree",
+      "score": 0.319,
+      "runner_up": "abc394_f",
+      "margin": 0.0406,
+      "ambiguous": false,
+      "candidates": [
+        "abc385_e"
+      ]
+    },
+    "lcbhard_70": {
+      "question_id": "abc386_f",
+      "title": "Operate K",
+      "score": 0.2247,
+      "runner_up": "arc188_a",
+      "margin": 0.1682,
+      "ambiguous": false,
+      "candidates": [
+        "abc386_f"
+      ]
+    },
+    "lcbhard_71": {
+      "question_id": "arc184_d",
+      "title": "Erase Balls 2D",
+      "score": 0.2459,
+      "runner_up": "abc394_f",
+      "margin": 0.156,
+      "ambiguous": false,
+      "candidates": [
+        "arc184_d"
+      ]
+    },
+    "lcbhard_72": {
+      "question_id": "arc185_c",
+      "title": "Sum of Three Integers",
+      "score": 0.3078,
+      "runner_up": "abc394_f",
+      "margin": 0.206,
+      "ambiguous": false,
+      "candidates": [
+        "arc185_c"
+      ]
+    },
+    "lcbhard_73": {
+      "question_id": "arc186_a",
+      "title": "Underclued",
+      "score": 0.1768,
+      "runner_up": "3563",
+      "margin": 0.1129,
+      "ambiguous": false,
+      "candidates": [
+        "arc186_a"
+      ]
+    },
+    "lcbhard_74": {
+      "question_id": "arc186_d",
+      "title": "Polish Mania",
+      "score": 0.2989,
+      "runner_up": "abc362_e",
+      "margin": 0.1809,
+      "ambiguous": false,
+      "candidates": [
+        "arc186_d"
+      ]
+    },
+    "lcbhard_75": {
+      "question_id": "arc186_e",
+      "title": "Missing Subsequence",
+      "score": 0.3658,
+      "runner_up": "abc394_f",
+      "margin": 0.2199,
+      "ambiguous": false,
+      "candidates": [
+        "arc186_e"
+      ]
+    },
+    "lcbhard_76": {
+      "question_id": "arc188_a",
+      "title": "ABC Symmetry",
+      "score": 0.3289,
+      "runner_up": "abc359_d",
+      "margin": 0.1956,
+      "ambiguous": false,
+      "candidates": [
+        "arc188_a"
+      ]
+    },
+    "lcbhard_77": {
+      "question_id": "3588",
+      "title": "count-the-number-of-winning-sequences",
+      "score": 0.3151,
+      "runner_up": "3560",
+      "margin": 0.262,
+      "ambiguous": false,
+      "candidates": [
+        "3588"
+      ]
+    },
+    "lcbhard_78": {
+      "question_id": "3608",
+      "title": "find-the-number-of-subsequences-with-equal-gcd",
+      "score": 0.2785,
+      "runner_up": "3316",
+      "margin": 0.2142,
+      "ambiguous": false,
+      "candidates": [
+        "3608"
+      ]
+    },
+    "lcbhard_79": {
+      "question_id": "3637",
+      "title": "count-number-of-balanced-permutations",
+      "score": 0.3301,
+      "runner_up": "2757",
+      "margin": 0.2749,
+      "ambiguous": false,
+      "candidates": [
+        "3637"
+      ]
+    },
+    "lcbhard_80": {
+      "question_id": "3631",
+      "title": "count-k-reducible-numbers-less-than-n",
+      "score": 0.3848,
+      "runner_up": "3690",
+      "margin": 0.3125,
+      "ambiguous": false,
+      "candidates": [
+        "3631"
+      ]
+    },
+    "lcbhard_81": {
+      "question_id": "3690",
+      "title": "smallest-substring-with-identical-characters-i",
+      "score": 0.2742,
+      "runner_up": "3631",
+      "margin": 0.2003,
+      "ambiguous": false,
+      "candidates": [
+        "3690"
+      ]
+    },
+    "lcbhard_82": {
+      "question_id": "abc388_f",
+      "title": "Dangerous Sugoroku",
+      "score": 0.2956,
+      "runner_up": "abc332_d",
+      "margin": 0.1827,
+      "ambiguous": false,
+      "candidates": [
+        "abc388_f"
+      ]
+    },
+    "lcbhard_83": {
+      "question_id": "abc388_e",
+      "title": "Simultaneous Kagamimochi",
+      "score": 0.2641,
+      "runner_up": "abc372_f",
+      "margin": 0.2191,
+      "ambiguous": false,
+      "candidates": [
+        "abc388_e"
+      ]
+    },
+    "lcbhard_84": {
+      "question_id": "abc389_g",
+      "title": "Odd Even Graph",
+      "score": 0.5117,
+      "runner_up": "abc397_g",
+      "margin": 0.4362,
+      "ambiguous": false,
+      "candidates": [
+        "abc389_g"
+      ]
+    },
+    "lcbhard_85": {
+      "question_id": "abc391_g",
+      "title": "Many LCS",
+      "score": 0.2326,
+      "runner_up": "abc358_e",
+      "margin": 0.1836,
+      "ambiguous": false,
+      "candidates": [
+        "abc391_g"
+      ]
+    },
+    "lcbhard_86": {
+      "question_id": "abc393_d",
+      "title": "Swap to Gather",
+      "score": 0.2226,
+      "runner_up": "abc332_d",
+      "margin": 0.1628,
+      "ambiguous": false,
+      "candidates": [
+        "abc393_d"
+      ]
+    },
+    "lcbhard_87": {
+      "question_id": "abc394_f",
+      "title": "Alkane",
+      "score": 0.5206,
+      "runner_up": "abc385_e",
+      "margin": 0.3275,
+      "ambiguous": false,
+      "candidates": [
+        "abc394_f"
+      ]
+    },
+    "lcbhard_88": {
+      "question_id": "abc396_g",
+      "title": "Flip Row or Col",
+      "score": 0.2606,
+      "runner_up": "abc379_g",
+      "margin": 0.186,
+      "ambiguous": false,
+      "candidates": [
+        "abc396_g"
+      ]
+    },
+    "lcbhard_89": {
+      "question_id": "abc397_f",
+      "title": "Variety Split Hard",
+      "score": 0.1806,
+      "runner_up": "abc394_f",
+      "margin": 0.0586,
+      "ambiguous": false,
+      "candidates": [
+        "abc397_f"
+      ]
+    },
+    "lcbhard_90": {
+      "question_id": "abc397_g",
+      "title": "Maximize Distance",
+      "score": 0.3388,
+      "runner_up": "abc394_f",
+      "margin": 0.1374,
+      "ambiguous": false,
+      "candidates": [
+        "abc397_g"
+      ]
+    },
+    "lcbhard_91": {
+      "question_id": "abc398_f",
+      "title": "ABCBA",
+      "score": 0.3517,
+      "runner_up": "2879",
+      "margin": 0.2893,
+      "ambiguous": false,
+      "candidates": [
+        "abc398_f"
+      ]
+    },
+    "lcbhard_92": {
+      "question_id": "abc399_f",
+      "title": "Range Power Sum",
+      "score": 0.2281,
+      "runner_up": "3316",
+      "margin": 0.156,
+      "ambiguous": false,
+      "candidates": [
+        "abc399_f"
+      ]
+    },
+    "lcbhard_93": {
+      "question_id": "arc192_e",
+      "title": "Snuke's Kyoto Trip",
+      "score": 0.248,
+      "runner_up": "abc332_d",
+      "margin": 0.1746,
+      "ambiguous": false,
+      "candidates": [
+        "arc192_e"
+      ]
+    },
+    "lcbhard_94": {
+      "question_id": "arc192_b",
+      "title": "Fennec VS. Snuke 2",
+      "score": 0.2687,
+      "runner_up": "abc394_f",
+      "margin": 0.1666,
+      "ambiguous": false,
+      "candidates": [
+        "arc192_b"
+      ]
+    },
+    "lcbhard_95": {
+      "question_id": "arc192_d",
+      "title": "Fraction Line",
+      "score": 0.335,
+      "runner_up": "arc182_c",
+      "margin": 0.2174,
+      "ambiguous": false,
+      "candidates": [
+        "arc192_d"
+      ]
+    },
+    "lcbhard_96": {
+      "question_id": "arc193_b",
+      "title": "Broken Wheel",
+      "score": 0.2858,
+      "runner_up": "abc372_f",
+      "margin": 0.1992,
+      "ambiguous": false,
+      "candidates": [
+        "arc193_b"
+      ]
+    },
+    "lcbhard_97": {
+      "question_id": "arc194_b",
+      "title": "Minimum Cost Sort",
+      "score": 0.2462,
+      "runner_up": "abc322_e",
+      "margin": 0.122,
+      "ambiguous": false,
+      "candidates": [
+        "arc194_b"
+      ]
+    },
+    "lcbhard_98": {
+      "question_id": "arc194_e",
+      "title": "Swap 0^X and 1^Y",
+      "score": 0.1431,
+      "runner_up": "abc385_e",
+      "margin": 0.0597,
+      "ambiguous": false,
+      "candidates": [
+        "arc194_e"
+      ]
+    },
+    "lcbhard_99": {
+      "question_id": "arc194_d",
+      "title": "Reverse Brackets",
+      "score": 0.2899,
+      "runner_up": "abc359_d",
+      "margin": 0.1939,
+      "ambiguous": false,
+      "candidates": [
+        "arc194_d"
+      ]
+    },
+    "lcbhard_100": {
+      "question_id": "arc196_c",
+      "title": "Strongly Connected",
+      "score": 0.3894,
+      "runner_up": "abc372_f",
+      "margin": 0.2746,
+      "ambiguous": false,
+      "candidates": [
+        "arc196_c"
+      ]
+    },
+    "lcbhard_101": {
+      "question_id": "3777",
+      "title": "maximum-product-of-subsequences-with-an-alternating-sum-equal-to-k",
+      "score": 0.3389,
+      "runner_up": "abc394_f",
+      "margin": 0.1621,
+      "ambiguous": false,
+      "candidates": [
+        "3777"
+      ]
+    },
+    "lcbhard_102": {
+      "question_id": "3783",
+      "title": "permutations-iv",
+      "score": 0.1607,
+      "runner_up": "abc332_d",
+      "margin": 0.0893,
+      "ambiguous": false,
+      "candidates": [
+        "3783"
+      ]
+    }
+  }
+}

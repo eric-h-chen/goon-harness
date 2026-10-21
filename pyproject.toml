@@ -1,0 +1,30 @@
+[project]
+name = "goon-harness"
+version = "0.1.0"
+description = "Measuring emergent reward hacking in agent harness optimization"
+requires-python = ">=3.11"
+dependencies = [
+    "inspect-ai",
+    "inspect-evals[swe_bench] @ git+https://github.com/UKGovernmentBEIS/inspect_evals",
+    # Pinned to a commit after the LiveCodeBench test-modification bug fix (specs/eval.md §4.3).
+    "impossiblebench @ git+https://github.com/safety-research/impossiblebench@d4f9a149db2b9cec0fed7bab01d91c07ee10aca2",
+    # swebench 5 removed MAP_REPO_VERSION_TO_SPECS and harness.test_spec, which both the
+    # ImpossibleBench and inspect_evals SWE-bench scorers import.
+    "swebench>=4,<5",
+    "datasets>=3.0",
+    "scikit-learn",
+    "scipy",
+    "numpy",
+    "matplotlib",
+]
+
+[dependency-groups]
+dev = ["pytest", "pytest-asyncio"]
+
+[tool.uv]
+package = false
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+asyncio_mode = "auto"
