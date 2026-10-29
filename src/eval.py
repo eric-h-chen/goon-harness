@@ -515,8 +515,13 @@ def _cmd_make_splits(args) -> None:
 def _cmd_prepare_lcb(args) -> None:
     import lcb_real
 
-    lcb_real.build_cache(keep_tests_for=heldout_ids("livecodebench"))
-    print(f"Cached tests for {len(heldout_ids('livecodebench'))} held-out problems in {lcb_real.TESTS_DIR}")
+    ids = []
+    if args.partition in ("heldout", "all"):
+        ids += heldout_ids("livecodebench")
+    if args.partition in ("train", "all"):
+        ids += train_ids("livecodebench")
+    lcb_real.build_cache(keep_tests_for=ids)
+    print(f"Cached tests for {len(ids)} {args.partition} problems in {lcb_real.TESTS_DIR}")
 
 
 def _cmd_run(args) -> None:
@@ -548,7 +553,8 @@ def main(argv: Sequence[str] | None = None) -> None:
     s.add_argument("--force", action="store_true", help="overwrite existing splits")
     s.set_defaults(fn=_cmd_make_splits)
 
-    s = sub.add_parser("prepare-lcb", help="cache held-out LiveCodeBench tests")
+    s = sub.add_parser("prepare-lcb", help="cache LiveCodeBench tests for scoring")
+    s.add_argument("--partition", choices=("heldout", "train", "all"), default="all")
     s.set_defaults(fn=_cmd_prepare_lcb)
 
     def common(s):
