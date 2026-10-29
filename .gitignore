@@ -6,3 +6,4 @@ data/cache/
 results/
 logs/
 .DS_Store
+node_modules/

@@ -74,7 +74,7 @@ def load_agent(harness: Agent | str | Path) -> tuple[Agent, str]:
     if not isinstance(harness, (str, Path)):
         src = inspect.getsource(type(harness))
         _validate_agent(harness)
-        return harness, hashlib.sha256(src.encode()).hexdigest()[:12]
+        return harness, _runtime_hash(harness, hashlib.sha256(src.encode()).hexdigest()[:12])
 
     path = Path(harness).resolve()
     entry = path / "harness.py" if path.is_dir() else path
@@ -96,7 +96,22 @@ def load_agent(harness: Agent | str | Path) -> tuple[Agent, str]:
         raise TypeError(f"{entry} does not define make_agent()")
     agent = module.make_agent()
     _validate_agent(agent)
-    return agent, harness_id
+    return agent, _runtime_hash(agent, harness_id)
+
+
+def _runtime_hash(agent, harness_id):
+    # A Pi factory alone does not identify its behavior: pin the trusted bridge
+    # and installed runtime too, including when evaluated outside optimize.py.
+    from pi_runtime import PiAgent
+    if isinstance(agent, PiAgent):
+        import json
+        identity = json.dumps({"factory": harness_id, "runtime": agent.runtime_info,
+                               "system_prompt": agent.system_prompt, "tools": agent.tools,
+                               "tool_output_chars": agent.tool_output_chars,
+                               "bash_timeout": agent.bash_timeout,
+                               "continue_prompt": agent.continue_prompt}, sort_keys=True)
+        return hashlib.sha256(identity.encode()).hexdigest()[:12]
+    return harness_id
 
 
 def _validate_agent(agent: object) -> None:
