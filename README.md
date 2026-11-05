@@ -6,7 +6,7 @@ The proposal is in `project_proposal/`, and the eval design is in [`specs/eval.m
 ## Setup
 
 ```bash
-uv sync                          # Python ≥ 3.11, installs into .venv
+uv sync                          # Python ≥ 3.12, installs into .venv
 uv run python src/eval.py prepare-lcb   # caches training + held-out tests (~4.5 GB download once)
 ```
 
@@ -178,7 +178,7 @@ selects the fixed task-solving model through Inspect.
 | --- | --- | --- |
 | `inspect` (default) | Inspect `provider/model` | Provider SDK credentials |
 | `claude-code` | Native Claude Code model ID or alias, without `anthropic/` | `ANTHROPIC_API_KEY` or `CLAUDE_CODE_OAUTH_TOKEN` |
-| `codex` | Native Codex model ID, without `openai/` | `CODEX_API_KEY` or `OPENAI_API_KEY` |
+| `codex` | Native Codex model ID, without `openai/` | `CODEX_API_KEY`, `OPENAI_API_KEY`, or file-based `codex login` |
 
 Build the pinned CLI image once (Docker must be running):
 
@@ -195,8 +195,11 @@ reflection. It does not directly run the benchmark or select the winner.
 
 The container needs outbound access to its model provider; this is filesystem
 isolation, not an egress allowlist. The prompt prohibits fetching benchmark data.
-Only the chosen provider's credential is forwarded. Host CLI logins and custom
-plugins/settings are not inherited. Codex uses its external-sandbox mode inside
+Only the chosen provider's credential is forwarded. Codex falls back to a
+file-based ChatGPT login in `$CODEX_HOME/auth.json` (default `~/.codex/auth.json`)
+when neither OpenAI key is set. Only a private credential copy enters the container;
+refreshed tokens are saved back if the host login has not changed. OS-keychain-only
+logins are not supported. Custom plugins/settings are not inherited. Codex uses its external-sandbox mode inside
 this container; there is deliberately no unsandboxed host CLI fallback.
 
 ```bash
@@ -268,3 +271,92 @@ These do not substitute for live provider/Docker benchmark smoke tests.
 Upstream interfaces: [Claude Code CLI](https://code.claude.com/docs/en/cli-reference),
 [Codex noninteractive mode](https://developers.openai.com/codex/noninteractive),
 [Pi agent-core](https://github.com/earendil-works/pi/tree/main/packages/agent).
+
+### Small Pi + Codex smoke test with OpenRouter
+
+Set `OPENROUTER_API_KEY` in the Git-ignored `.env`, and authenticate with
+`codex login` (file credential storage). The OpenRouter SDK dependency is included.
+This runs the baseline and one candidate on two training tasks, without held-out
+evaluation. Use a fresh run directory for a new experiment:
+
+```bash
+uv run --env-file .env python src/optimize.py \
+  --run-dir results/pi-codex-smoke --base-harness pi \
+  --model openrouter/openai/gpt-6-luna \
+  --proposer-backend codex --proposer-model gpt-6-luna \
+  --iterations 1 --candidates 1 --batch-size 2 \
+  --max-samples 2 --max-sandboxes 2 --eval-every 0 --proposer-timeout 600
+```
+
+### Optimize on the fixed 25-task SWE training pilot
+
+`--batch-file` loads exact training IDs instead of drawing a new batch. The JSON
+maps suite names to ID lists; `--suites` must match its keys. Held-out, duplicate,
+and out-of-pool IDs are rejected. The selected IDs are frozen in the run config,
+so modifying the batch requires a new run directory.
+
+`data/batches/swe25-mixed.json` contains 25 SWE-bench Verified training tasks that
+also have ImpossibleBench equivalents: 8 easy, 9 medium, 7 hard, and 1 very hard.
+The pilot used seed 329 with repository round-robin sampling within each difficulty.
+This configuration uses standard SWE scoring (one submission), the Pi baseline,
+a GPT-5.6 Luna solver, and a Codex GPT-6 Luna proposer. Held-out eval is deferred.
+
+```bash
+uv run --env-file .env python src/optimize.py \
+  --run-dir results/swe25-gpt56luna-opt10-c4 \
+  --base-harness pi --model openrouter/openai/gpt-5.6-luna \
+  --proposer-backend codex --proposer-model gpt-6-luna \
+  --suites swe_real --batch-file data/batches/swe25-mixed.json \
+  --iterations 10 --candidates 1 \
+  --max-samples 4 --max-sandboxes 4 --eval-every 0
+```
+
+## Editable Pi agent loops
+
+`--base-harness pi-loop` optimizes executable JavaScript, including the agent loop
+and tool implementations. The older `pi` mode remains configuration-only and
+continues to load existing Python factories.
+
+The new seed is `src/agents/pi_loop.mjs`. Each candidate exports
+`async function solve(api, task)` and can define tools, change control flow, run
+planning/review passes, manage context, or replace Pi's default loop entirely.
+The pinned Pi `Agent` is available as `api.Agent`. See
+`runtimes/pi/loop-api.txt` for the exact interface. The model, budgets, sandbox
+operations, submission snapshots and scores remain evaluator-owned.
+
+Build the solver-loop image (separate from the Codex/Claude proposer image):
+
+```bash
+docker build -t goon-pi-loop:local runtimes/pi
+```
+
+Every task starts a fresh, non-root loop container: no network, credentials, host
+home, evaluator files, task filesystem mount, or Docker socket. Only the candidate
+source is mounted read-only. All task operations use RPC into the existing task
+sandbox; the harness container's local filesystem is only scratch space. Resource
+limits are 512 MiB RAM, one CPU, 64 PIDs, and 64 MiB scratch per loop container, in
+addition to the task sandbox. Four-way evaluation therefore adds up to 2 GiB of
+loop-container memory limits. Direct HTTP model clients cannot bypass accounting.
+
+Use a **new run directory** for the expanded search space:
+
+```bash
+caffeinate -i uv run --env-file .env python src/optimize.py \
+  --run-dir results/swe25-editable-pi-opt10 \
+  --base-harness pi-loop --model openrouter/openai/gpt-5.6-luna \
+  --proposer-backend codex --proposer-model gpt-6-luna \
+  --suites swe_real --batch-file data/batches/swe25-mixed.json \
+  --iterations 10 --candidates 1 \
+  --max-samples 4 --max-sandboxes 4 --eval-every 0
+```
+
+The proposer sees `loop_api.txt` and each candidate's `harness.mjs`, scores and
+traces. Selection, checkpointing and resume support these modules; the final
+winner is `best.mjs`. Evaluate it with the usual `src/eval.py run --harness ...`
+command, keeping the same solver model. Source and resolved Docker image identity
+are included in the harness hash, and a changed runtime image requires a new run.
+RPC operations are serialized; multiple logical agents share the same model budget.
+This mode uses JavaScript ES modules, not an arbitrary package/dependency build.
+The legacy Python harness modes remain trusted-code interfaces; their static
+source checks are not a security sandbox. New editable loops do not execute
+candidate Python in the evaluator process.

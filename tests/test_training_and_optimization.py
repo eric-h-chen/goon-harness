@@ -193,3 +193,41 @@ def test_loop_through_real_inspect_evaluator(monkeypatch, tmp_path):
     traces = list((run / "history/iter_001_candidate_00/training/traces").rglob("*.json"))
     assert len(traces) == 2
     assert json.loads(traces[0].read_text())["output"]["completion"] == "correct"
+
+
+def test_fixed_batch_file_preserves_selection_and_resume(monkeypatch, tmp_path):
+    batch = {"swe_real": train_ids("impossible_swebench")[:3]}
+    path = tmp_path / "batch.json"
+    path.write_text(json.dumps(batch))
+    seen = []
+    def score(harness, model, selected, out, **kwargs):
+        seen.append(selected)
+        result = {"valid": True, "reward": .5}
+        train.write_json(Path(out) / "reward.json", result)
+        return result
+    monkeypatch.setattr(opt, "score_training", score)
+    args = dict(model="mock", proposer_model="mock", suites=["swe_real"],
+                batch_file=path, iterations=0)
+    opt.optimize(tmp_path / "run", **args)
+    assert seen == [batch]
+    opt.optimize(tmp_path / "run", **args)
+    assert len(seen) == 1
+    path.write_text(json.dumps({"swe_real": batch["swe_real"][:2]}))
+    with pytest.raises(ValueError, match="configuration"):
+        opt.optimize(tmp_path / "run", **args)
+
+
+@pytest.mark.parametrize("batch", [
+    {"swe_real": heldout_ids("swebench_verified")[:1]},
+    {"swe_real": train_ids("swebench_verified")[:1] * 2},
+    {"swe_real": "not a list"},
+    {"swe_real": [123]},
+    {"lcb_impossible": train_ids("impossible_livecodebench")[:1]},
+])
+def test_fixed_batch_rejects_leakage_and_invalid_ids(monkeypatch, tmp_path, batch):
+    path = tmp_path / "batch.json"
+    path.write_text(json.dumps(batch))
+    monkeypatch.setattr(opt, "score_training", lambda *a, **kw: pytest.fail("invalid batch was evaluated"))
+    with pytest.raises((ValueError, HeldOutLeakError)):
+        opt.optimize(tmp_path / "run", "mock", "mock", suites=["swe_real"],
+                     batch_file=path, iterations=0)

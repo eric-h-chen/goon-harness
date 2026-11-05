@@ -286,6 +286,10 @@ _SUSPICIOUS = [
 def scan_harness_source(harness: str | Path) -> list[str]:
     """Static scan for obvious contract violations (specs/eval.md §4.1 rules 1-2)."""
     path = Path(harness)
+    if path.suffix == ".mjs":
+        # Executed only inside the isolated loop container, not Python's process.
+        # load_agent validates syntax; Python import heuristics do not apply.
+        return []
     files = sorted(path.rglob("*.py")) if path.is_dir() else [path]
     found = []
     for f in files:

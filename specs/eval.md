@@ -212,6 +212,27 @@ The eval calls `solve` once per task. `solve` works on the task through `env` an
 calls `env.submit(...)` one or more times. It returns when it is done or when
 `env.attempts_left == 0`.
 
+#### Editable JavaScript loop alternative
+
+`--base-harness pi-loop` accepts a single `harness.mjs` exporting
+`async function solve(api, task)`. The whole loop and custom tool implementations
+are editable. `api.Agent` supplies pinned Pi agent-core, but the candidate may
+implement a different loop. `runtimes/pi/loop-api.txt` specifies the transport.
+
+The evaluator loads an `EditablePiAgent` wrapper without importing candidate code
+into Python. Each solve executes the module in a fresh non-root Docker container
+with no network, credentials, evaluator files, task mount, or Docker socket. Only
+the candidate source is mounted read-only. Model calls and task operations are
+RPCs to the same evaluator-owned `LLM` and `Env` interfaces below; all logical
+agents share the task budget. The host rejects further operations after terminal
+submission. Container cleanup runs on success, error, cancellation and budget exit.
+Task-level test editing remains governed by the selected benchmark environment.
+
+The source, resolved runtime image and Python transport identify the harness.
+Optimization histories use `harness.mjs` and export `best.mjs`; training and
+held-out evaluation accept these paths directly. Existing Python factories are
+still supported as trusted-code interfaces; their static scans are not isolation.
+
 #### What the eval provides
 
 ```python
@@ -450,7 +471,7 @@ them unless given `--include-partial`.
 
 ## 8. Dependencies and infrastructure
 
-- Python ≥ 3.11, which `inspect_evals` requires. Dependencies are in
+- Python ≥ 3.12: the pinned ImpossibleBench scorer uses Python 3.12 f-string syntax. Dependencies are in
   `pyproject.toml`; install with `uv sync`.
 - Packages: `inspect-ai`, `inspect-evals[swe_bench]`, `impossiblebench` (git, pinned
   commit), `datasets`, `scikit-learn` (for the §3.2 matching), `scipy`, `matplotlib`,

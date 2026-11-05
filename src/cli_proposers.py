@@ -7,6 +7,7 @@ these containers. Provider credentials are passed by environment name, never arg
 from __future__ import annotations
 
 import asyncio
+from contextlib import contextmanager, ExitStack
 import json
 import os
 from pathlib import Path
@@ -26,15 +27,68 @@ SCHEMA = {"type": "object", "properties": {"source": {"type": "string"},
 def credentials(backend):
     if backend == "codex":
         key = os.environ.get("CODEX_API_KEY") or os.environ.get("OPENAI_API_KEY")
-        if not key:
-            raise ValueError("Codex proposer requires CODEX_API_KEY or OPENAI_API_KEY")
-        return {"CODEX_API_KEY": key}
+        if key:
+            return {"CODEX_API_KEY": key}
+        codex_auth_file()  # Validate the file login before launching evaluations.
+        return {}
     if backend == "claude-code":
         for name in ("ANTHROPIC_API_KEY", "CLAUDE_CODE_OAUTH_TOKEN"):
             if os.environ.get(name):
                 return {name: os.environ[name]}
         raise ValueError("Claude Code proposer requires ANTHROPIC_API_KEY or CLAUDE_CODE_OAUTH_TOKEN")
     raise ValueError(f"Unknown CLI proposer {backend}")
+
+
+def codex_auth_file():
+    path = Path(os.environ.get("CODEX_HOME", Path.home() / ".codex")) / "auth.json"
+    try:
+        value = json.loads(path.read_text())
+    except (OSError, ValueError):
+        raise ValueError("Codex requires an API key or a file-based ChatGPT login (codex login)") from None
+    if value.get("auth_mode") != "chatgpt" or not value.get("tokens", {}).get("refresh_token"):
+        raise ValueError("Codex auth.json must contain a ChatGPT subscription login")
+    return path
+
+
+@contextmanager
+def subscription_auth(backend, auth, temporary):
+    """Expose only a private credential copy; preserve CLI token refreshes.
+
+    Never mount the user's Codex home (settings, sessions, and plugins).
+    Avoid overwriting a host login that changed during the proposal.
+    """
+    if backend != "codex" or auth:
+        yield []
+        return
+    source = codex_auth_file()
+    original = source.read_bytes()
+    directory = temporary / "codex-auth"
+    directory.mkdir(mode=0o700)
+    cached = directory / "auth.json"
+    cached.write_bytes(original)
+    cached.chmod(0o600)
+    try:
+        yield ["--user", f"{os.getuid()}:{os.getgid()}",
+               "--env", "CODEX_HOME=/codex-auth",
+               "--mount", f"type=bind,src={directory},dst=/codex-auth"]
+    finally:
+        if cached.is_file() and not cached.is_symlink():
+            refreshed = cached.read_bytes()
+            if refreshed != original and source.read_bytes() == original:
+                try:
+                    value = json.loads(refreshed)
+                    valid = value.get("auth_mode") == "chatgpt" and bool(value.get("tokens", {}).get("refresh_token"))
+                except (ValueError, AttributeError):
+                    valid = False
+                if valid:
+                    # Atomic write with private permissions, outside the repo/artifacts.
+                    fd, name = tempfile.mkstemp(prefix=".goon-auth-", dir=source.parent)
+                    try:
+                        with os.fdopen(fd, "wb") as f:
+                            f.write(refreshed)
+                        os.replace(name, source)
+                    finally:
+                        Path(name).unlink(missing_ok=True)
 
 
 def preflight(backend, image):
@@ -56,7 +110,7 @@ def snapshot_history(history, destination):
     for path in root.rglob("*"):
         if path.is_symlink() or not path.is_file():
             continue
-        if path.suffix not in (".py", ".json", ".jsonl", ".txt", ".eval"):
+        if path.suffix not in (".py", ".mjs", ".json", ".jsonl", ".txt", ".eval"):
             continue
         if any((root / p).is_symlink() for p in path.relative_to(root).parents if p != Path(".")):
             continue
@@ -121,11 +175,12 @@ async def propose_cli(history, model, prompt, out_dir, *, backend, system_prompt
     instruction = (system_prompt + "\n\n" + prompt + "\n\n"
                    "All training history is mounted read-only at /history. Use your shell/read tools "
                    "to inspect it. Paths in the task description are relative to /history. "
-                   "Work only in /workspace. Return a JSON object with source (complete Python "
+                   "Work only in /workspace. Return a JSON object with source (complete "
                    "harness) and reflection (your reasoning about the change). Do not run benchmark "
                    "evaluations yourself. Do not retrieve benchmark data from the network.")
-    with tempfile.TemporaryDirectory(prefix="goon-proposer-") as temporary:
+    with tempfile.TemporaryDirectory(prefix="goon-proposer-") as temporary, ExitStack() as stack:
         temp = Path(temporary)
+        auth_args = stack.enter_context(subscription_auth(backend, auth, temp))
         snapshot, workspace = temp / "history", temp / "workspace"
         snapshot_history(history, snapshot)
         workspace.mkdir(mode=0o777)
@@ -139,6 +194,7 @@ async def propose_cli(history, model, prompt, out_dir, *, backend, system_prompt
                    "--mount", f"type=bind,src={snapshot},dst=/history,readonly",
                    "--mount", f"type=bind,src={workspace},dst=/workspace",
                    "--workdir", "/workspace"]
+        command += auth_args
         for name in auth:
             command += ["--env", name]
         command += [image, *cli_command(backend, model, max_calls)]

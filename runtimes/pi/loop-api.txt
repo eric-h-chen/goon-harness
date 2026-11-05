@@ -1,0 +1,47 @@
+Editable harness contract (pi-loop)
+=================================
+Submit a complete JavaScript ES module exporting async function solve(api, task).
+The complete source is editable: loops, custom tools, multiple agent passes,
+prompts, retry strategies, context pruning/summarization, and stopping rules.
+You may use api.Agent (the pinned Pi agent-core Agent) or implement your own loop.
+You do not need a Python factory. No host Python candidate code is executed.
+
+Task: {kind: 'swe'|'lcb', prompt, workdir, starter_code, tests_visible,
+       limits: {max_llm_calls, max_attempts, wall_clock_s}}
+No task ID, benchmark answer, evaluator code, or held-out data is provided.
+
+api.Agent: actual Pi Agent constructor (v1.4.0).
+api.model: fixed solver descriptor to pass to Pi. Changing this does not change
+           the evaluator-selected model.
+api.streamFn: Pi-compatible streaming adapter; forwards the transcript's system
+              messages and current custom tool schemas to the metered model.
+api.generate(messages, tools=[], config={}): returns a Pi AssistantMessage.
+  messages use Pi roles system/user/assistant/toolResult. Preserve the returned
+  assistant message's _inspect field for provider reasoning metadata.
+  tools are JSON {name, description, parameters: JSONSchema}; define and execute
+  tool implementations in your candidate. generate does NOT execute tool calls.
+  config supports max_tokens (1..32768), temperature, reasoning_effort.
+api.exec(command, timeout=180): {returncode, stdout, stderr}; runs inside the TASK
+  sandbox, in task.workdir. timeout must be >0 and <=180 seconds.
+api.readFile(path): task file text.
+api.writeFile(path, content): writes a task file, returns null.
+api.submit(answer?): {passed, details, attempts_left}. For lcb pass complete Python
+  solution source. For swe omit answer; the evaluator snapshots the repository.
+api.done: whether a submission ended the task. No further model/task operations
+  are allowed after terminal submission, even if your code ignores this flag.
+
+All model calls, including planning/review/subagents, share the per-task budget.
+The transport serializes RPC operations in arrival order. Promise.all is allowed
+but does not add parallel model execution. Every solve starts in a fresh container.
+The container has no network, credentials, evaluator files, dataset, Docker socket,
+or task filesystem mount. Local Node filesystem/process operations only affect
+its own temporary scratch space, not the task; use api for task operations.
+Its CPU/RAM/PID/scratch limits are fixed. stdout is protocol-reserved; use console.log
+(which is redirected to stderr) for diagnostic messages. Do not write stdout.
+Task-level edits remain available through api; do not tamper with the evaluator,
+reference answers, task selection, or score accounting. Do not fetch benchmark data.
+
+Custom Pi tools have {name,label,description,parameters,execute:async(id,args)=>
+({content:[{type:'text',text:'result'}],details:{},terminate:api.done})}.
+The seed demonstrates the default tools and loop. You may replace both entirely.
+Use api.streamFn with Pi so custom tool schemas and system prompts reach the model.

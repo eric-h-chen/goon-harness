@@ -72,11 +72,20 @@ def load_agent(harness: Agent | str | Path) -> tuple[Agent, str]:
     """Return (agent, harness_id). ``harness`` is an Agent, a harness .py file, or a dir
     containing ``harness.py``. harness_id hashes the harness source."""
     if not isinstance(harness, (str, Path)):
+        from editable_pi import EditablePiAgent
+        if isinstance(harness, EditablePiAgent):
+            return harness, harness.harness_id
         src = inspect.getsource(type(harness))
         _validate_agent(harness)
         return harness, _runtime_hash(harness, hashlib.sha256(src.encode()).hexdigest()[:12])
 
-    path = Path(harness).resolve()
+    path = Path(harness).absolute()
+    if path.suffix == ".mjs":
+        from editable_pi import EditablePiAgent, validate_source
+        validate_source(path)
+        agent = EditablePiAgent(path.read_text())
+        return agent, agent.harness_id
+    path = path.resolve()
     entry = path / "harness.py" if path.is_dir() else path
     files = sorted(path.rglob("*.py")) if path.is_dir() else [path]
     digest = hashlib.sha256()

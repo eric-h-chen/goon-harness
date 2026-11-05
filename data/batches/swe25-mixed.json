@@ -1,0 +1,29 @@
+{
+  "swe_real": [
+    "pytest-dev__pytest-6202",
+    "astropy__astropy-14309",
+    "scikit-learn__scikit-learn-14983",
+    "pydata__xarray-6461",
+    "django__django-16429",
+    "matplotlib__matplotlib-25122",
+    "sympy__sympy-13480",
+    "pylint-dev__pylint-6903",
+    "pydata__xarray-2905",
+    "matplotlib__matplotlib-22865",
+    "astropy__astropy-13453",
+    "pytest-dev__pytest-7571",
+    "scikit-learn__scikit-learn-14894",
+    "django__django-12754",
+    "mwaskom__seaborn-3187",
+    "sympy__sympy-24443",
+    "sphinx-doc__sphinx-8638",
+    "pylint-dev__pylint-4551",
+    "scikit-learn__scikit-learn-25102",
+    "astropy__astropy-13579",
+    "pytest-dev__pytest-10356",
+    "django__django-16631",
+    "sympy__sympy-17630",
+    "pytest-dev__pytest-5787",
+    "pydata__xarray-6992"
+  ]
+}

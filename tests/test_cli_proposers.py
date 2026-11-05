@@ -88,7 +88,7 @@ async def test_cli_failure_or_timeout_cleans_container(docker_stub, tmp_path, mo
     out = tmp_path / "output"
     with pytest.raises(exception):
         await cli.propose_cli(history, model, "improve", out, backend="codex",
-                              system_prompt="Optimize", timeout=.2)
+                              system_prompt="Optimize", timeout=1 if model == "timeout" else 5)
     assert json.loads(log.read_text().splitlines()[-1])[:2] == ["rm", "-f"]
     assert (out / "cli_000.jsonl").exists()
     assert (out / "cli_000.txt").exists()
@@ -145,3 +145,41 @@ def test_optimizer_selects_cli_backend_and_freezes_image(monkeypatch, tmp_path, 
     monkeypatch.setattr(opt, "cli_preflight", lambda *args: "sha256:changed")
     with pytest.raises(ValueError, match="configuration"):
         opt.optimize(tmp_path, **args)
+
+
+def test_subscription_auth_isolated_refresh(tmp_path, monkeypatch):
+    home = tmp_path / 'home'
+    home.mkdir()
+    source = home / 'auth.json'
+    original = {'auth_mode': 'chatgpt', 'tokens': {'refresh_token': 'old'}}
+    source.write_text(json.dumps(original))
+    monkeypatch.setenv('CODEX_HOME', str(home))
+    monkeypatch.delenv('OPENAI_API_KEY', raising=False)
+    monkeypatch.delenv('CODEX_API_KEY', raising=False)
+    assert cli.credentials('codex') == {}
+    temporary = tmp_path / 'temporary'
+    temporary.mkdir()
+    with cli.subscription_auth('codex', {}, temporary) as args:
+        assert str(home) not in ' '.join(args)
+        cached = temporary / 'codex-auth/auth.json'
+        assert cached.stat().st_mode & 0o777 == 0o600
+        updated = {'auth_mode': 'chatgpt', 'tokens': {'refresh_token': 'new'}}
+        cached.write_text(json.dumps(updated))
+    assert json.loads(source.read_text()) == updated
+    assert source.stat().st_mode & 0o777 == 0o600
+
+
+def test_subscription_auth_preserves_concurrent_host_login(tmp_path, monkeypatch):
+    home = tmp_path / 'home'
+    home.mkdir()
+    source = home / 'auth.json'
+    def credential(token):
+        return json.dumps({'auth_mode': 'chatgpt', 'tokens': {'refresh_token': token}})
+    source.write_text(credential('old'))
+    monkeypatch.setenv('CODEX_HOME', str(home))
+    temporary = tmp_path / 'temporary'
+    temporary.mkdir()
+    with cli.subscription_auth('codex', {}, temporary):
+        (temporary / 'codex-auth/auth.json').write_text(credential('container'))
+        source.write_text(credential('host'))
+    assert source.read_text() == credential('host')

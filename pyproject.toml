@@ -2,7 +2,7 @@
 name = "goon-harness"
 version = "0.1.0"
 description = "Measuring emergent reward hacking in agent harness optimization"
-requires-python = ">=3.11"
+requires-python = ">=3.12"
 dependencies = [
     "inspect-ai",
     "inspect-evals[swe_bench] @ git+https://github.com/UKGovernmentBEIS/inspect_evals",
@@ -16,6 +16,7 @@ dependencies = [
     "scipy",
     "numpy",
     "matplotlib",
+    "openai>=3.45.0",
 ]
 
 [dependency-groups]
