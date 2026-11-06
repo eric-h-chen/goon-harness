@@ -1,0 +1,117 @@
+{
+  "version": 2,
+  "model": "openrouter/openai/gpt-5.6-luna",
+  "proposer_model": "gpt-6-astra",
+  "batch": {
+    "swe_real": [
+      "pytest-dev__pytest-6202",
+      "astropy__astropy-14309",
+      "scikit-learn__scikit-learn-14983",
+      "pydata__xarray-6461",
+      "django__django-16429",
+      "matplotlib__matplotlib-25122",
+      "sympy__sympy-13480",
+      "pylint-dev__pylint-6903",
+      "pydata__xarray-2905",
+      "matplotlib__matplotlib-22865",
+      "astropy__astropy-13453",
+      "pytest-dev__pytest-7571",
+      "scikit-learn__scikit-learn-14894",
+      "django__django-12754",
+      "mwaskom__seaborn-3187",
+      "sympy__sympy-24443",
+      "sphinx-doc__sphinx-8638",
+      "pylint-dev__pylint-4551",
+      "scikit-learn__scikit-learn-25102",
+      "astropy__astropy-13579",
+      "pytest-dev__pytest-10356",
+      "django__django-16631",
+      "sympy__sympy-17630",
+      "pytest-dev__pytest-5787",
+      "pydata__xarray-6992"
+    ]
+  },
+  "proposer_backend": "codex",
+  "proposer_timeout": 1800,
+  "proposer_image_id": "sha256:9bf03ae579afd0383f2870f9d68a41b476d0c68b62dd0b1bd23e27ac2ec4d2ce",
+  "base_harness": "pi-loop",
+  "pi_runtime": {
+    "image_id": "sha256:d454003916c449751766bf6839e484b9f97691dea8d947cccea6810f18bd00e3",
+    "python_sha256": "665fb7b5c3d0b60e1c00c7dc0f135fedb7b19fae069c49e9f5809533efc62573",
+    "message_bridge_sha256": "b2a0e3624b6ef193dac0b8fe6d8854edb6571ac99a7218412d351affd21270f8"
+  },
+  "seed": 329,
+  "candidates": 1,
+  "proposer_calls": 30,
+  "seed_sha256": "e2994d3f10936c1d2d37614571391f9f43375fc66d3411b9de240194fd58b5fc",
+  "split_file_hash": "f5e658050a3b",
+  "suite_settings": {
+    "lcb_real": {
+      "name": "lcb_real",
+      "kind": "lcb",
+      "benchmark": "livecodebench",
+      "split_key": "livecodebench",
+      "impossible": false,
+      "limits": {
+        "max_llm_calls": 30,
+        "max_attempts": 1,
+        "wall_clock_s": 900
+      }
+    },
+    "lcb_impossible": {
+      "name": "lcb_impossible",
+      "kind": "lcb",
+      "benchmark": "livecodebench",
+      "split_key": "impossible_livecodebench",
+      "impossible": true,
+      "limits": {
+        "max_llm_calls": 30,
+        "max_attempts": 3,
+        "wall_clock_s": 900
+      }
+    },
+    "swe_real": {
+      "name": "swe_real",
+      "kind": "swe",
+      "benchmark": "swebench",
+      "split_key": "swebench_verified",
+      "impossible": false,
+      "limits": {
+        "max_llm_calls": 100,
+        "max_attempts": 1,
+        "wall_clock_s": 3600
+      }
+    },
+    "swe_impossible": {
+      "name": "swe_impossible",
+      "kind": "swe",
+      "benchmark": "swebench",
+      "split_key": "impossible_swebench",
+      "impossible": true,
+      "limits": {
+        "max_llm_calls": 100,
+        "max_attempts": 10,
+        "wall_clock_s": 3600
+      }
+    }
+  },
+  "eval_every": 0,
+  "eval_suites": [
+    "lcb_real",
+    "lcb_impossible"
+  ],
+  "max_samples": 4,
+  "max_sandboxes": 4,
+  "implementation": {
+    "train.py": "6d5bd3ef4b868d7606b099b5f0d66fe00b810800955caac11f0dc35b88ce6721",
+    "optimize.py": "7bf7bf6f2f45eb89de7380982a1227ddcad49b2837692d917b44b5ed364599f0",
+    "adapter.py": "8154102fcf303f3cc398927103695bf7df2debbcc3e1b435de9b82c3ea5d5795",
+    "eval.py": "15543940ec54e84e5a58f98034aea31aa7cd7188e43e39bd285695d2041cb994",
+    "lcb_real.py": "ff3266519f9c3046c267c9a245b5fad6013d11c43a4b67320c487ceff3bd20c5",
+    "splits.py": "3ef52a2d92d795347d7ebc186fc651a2db8c00ab8636338a3cf37d2e32042db1",
+    "cli_proposers.py": "3621aa110595fd788491b7727780f41c55ff61c3e274af0059caa13b8a52fbe6",
+    "pi_runtime.py": "b2a0e3624b6ef193dac0b8fe6d8854edb6571ac99a7218412d351affd21270f8",
+    "editable_pi.py": "665fb7b5c3d0b60e1c00c7dc0f135fedb7b19fae069c49e9f5809533efc62573"
+  },
+  "lock_sha256": "fe60563edb1aeecc426a3faf6452843cab18226302fa071377559f64d556ede6"
+}

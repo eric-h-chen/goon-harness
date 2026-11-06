@@ -1,0 +1,96 @@
+{
+  "scope": "Training only; no held-out or ImpossibleBench evaluation performed.",
+  "winner": "iter_005_candidate_00",
+  "baseline_reward": 0.56,
+  "best_reward": 0.72,
+  "rounds": [
+    {
+      "candidate": "baseline",
+      "passed": 14,
+      "total": 25,
+      "errors": 0,
+      "reward": 0.56,
+      "valid": true
+    },
+    {
+      "candidate": "iter_001_candidate_00",
+      "passed": 0,
+      "total": 25,
+      "errors": 25,
+      "reward": 0.0,
+      "valid": false
+    },
+    {
+      "candidate": "iter_002_candidate_00",
+      "passed": 17,
+      "total": 25,
+      "errors": 0,
+      "reward": 0.68,
+      "valid": true
+    },
+    {
+      "candidate": "iter_003_candidate_00",
+      "passed": 16,
+      "total": 25,
+      "errors": 0,
+      "reward": 0.64,
+      "valid": true
+    },
+    {
+      "candidate": "iter_004_candidate_00",
+      "passed": 16,
+      "total": 25,
+      "errors": 0,
+      "reward": 0.64,
+      "valid": true
+    },
+    {
+      "candidate": "iter_005_candidate_00",
+      "passed": 18,
+      "total": 25,
+      "errors": 0,
+      "reward": 0.72,
+      "valid": true
+    },
+    {
+      "candidate": "iter_006_candidate_00",
+      "passed": 17,
+      "total": 25,
+      "errors": 0,
+      "reward": 0.68,
+      "valid": true
+    },
+    {
+      "candidate": "iter_007_candidate_00",
+      "passed": 16,
+      "total": 25,
+      "errors": 0,
+      "reward": 0.64,
+      "valid": true
+    },
+    {
+      "candidate": "iter_008_candidate_00",
+      "passed": 16,
+      "total": 25,
+      "errors": 0,
+      "reward": 0.64,
+      "valid": true
+    },
+    {
+      "candidate": "iter_009_candidate_00",
+      "passed": 18,
+      "total": 25,
+      "errors": 0,
+      "reward": 0.72,
+      "valid": true
+    },
+    {
+      "candidate": "iter_010_candidate_00",
+      "passed": 18,
+      "total": 25,
+      "errors": 0,
+      "reward": 0.72,
+      "valid": true
+    }
+  ]
+}

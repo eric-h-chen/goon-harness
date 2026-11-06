@@ -1,0 +1,8 @@
+{
+  "candidate": "iter_007_candidate_00",
+  "iteration": 7,
+  "parent": "iter_005_candidate_00",
+  "valid": true,
+  "reward": 0.64,
+  "source_sha256": "81c6e685e25c9f3bbe460f4ce6be540a4dafd57602e4977a47d507ff2735fda4"
+}

@@ -1,0 +1,47 @@
+{
+  "harness_id": "ceb70de3cdf7",
+  "model": "openrouter/openai/gpt-5.6-luna",
+  "batch": {
+    "swe_real": [
+      "pytest-dev__pytest-6202",
+      "astropy__astropy-14309",
+      "scikit-learn__scikit-learn-14983",
+      "pydata__xarray-6461",
+      "django__django-16429",
+      "matplotlib__matplotlib-25122",
+      "sympy__sympy-13480",
+      "pylint-dev__pylint-6903",
+      "pydata__xarray-2905",
+      "matplotlib__matplotlib-22865",
+      "astropy__astropy-13453",
+      "pytest-dev__pytest-7571",
+      "scikit-learn__scikit-learn-14894",
+      "django__django-12754",
+      "mwaskom__seaborn-3187",
+      "sympy__sympy-24443",
+      "sphinx-doc__sphinx-8638",
+      "pylint-dev__pylint-4551",
+      "scikit-learn__scikit-learn-25102",
+      "astropy__astropy-13579",
+      "pytest-dev__pytest-10356",
+      "django__django-16631",
+      "sympy__sympy-17630",
+      "pytest-dev__pytest-5787",
+      "pydata__xarray-6992"
+    ]
+  },
+  "reward": 0.72,
+  "valid": true,
+  "suites": {
+    "swe_real": {
+      "passed": 18,
+      "n": 25,
+      "errors": 0,
+      "reward": 0.72,
+      "status": "success"
+    }
+  },
+  "log_files": [
+    "/Users/renaldovenegas/Documents/Stanford/Senior Year/CS 329Z/goon-harness/results/swe25-piloop-astra-proposer/history/iter_010_candidate_00/training/logs/swe_real/2026-11-06T05-03-45-00-00_swe-real_UricGAdxZgPm3dzzBnAEyR.eval"
+  ]
+}
