@@ -118,6 +118,88 @@ def split_file_hash() -> str:
     return hashlib.sha256(HELDOUT_PATH.read_bytes()).hexdigest()[:12]
 
 
+# --------------------------------------------------------------------------- held-out subsets
+
+SUBSET_PATH = SPLITS_DIR / "heldout_subset_midpoint.json"
+LCB_INDEX_PATH = ROOT / "data" / "cache" / "lcb_release_v6_index.jsonl"
+
+
+def _swe_repo(instance_id: str) -> str:
+    return instance_id.rsplit("-", 1)[0]  # "astropy__astropy-14182" -> "astropy__astropy"
+
+
+def make_heldout_subset(
+    n_swe_impossible: int = 25,
+    n_swe_real: int = 20,
+    n_lcb_impossible: int = 50,
+    n_lcb_real: int = 30,
+    path: Path = SUBSET_PATH,
+    force: bool = False,
+) -> dict:
+    """Write a fixed, seeded subset of the held-out split for cheaper evaluation.
+
+    Mirrors how the held-out set itself is built (§3.1): each real-benchmark subset takes
+    the same share of ImpossibleBench-derived problems as the full held-out list, and that
+    share is drawn from the chosen impossible subset, so real and cheating cells overlap.
+    SWE strata are repos; LiveCodeBench strata are difficulties.
+    """
+    path = Path(path)
+    if path.exists() and not force:
+        raise FileExistsError(f"{path} already exists; subsets are fixed once used. Pass force=True.")
+    rng = random.Random(SEED)
+    held = {b: heldout_ids(b) for b in BENCHMARKS}
+
+    def real_subset(imp_subset, imp_all, real_all, n_real, key):
+        n_from_imp = round(n_real * len(imp_all) / len(real_all))
+        from_imp = _stratified_sample(imp_subset, key, n_from_imp, rng)
+        extras = _stratified_sample(set(real_all) - set(imp_all), key, n_real - n_from_imp, rng)
+        return sorted(from_imp + extras)
+
+    # ---- SWE-bench
+    repo = {i: _swe_repo(i) for i in held["swebench_verified"]}
+    swe_imp = _stratified_sample(held["impossible_swebench"], repo, n_swe_impossible, rng)
+    swe_real = real_subset(swe_imp, held["impossible_swebench"], held["swebench_verified"],
+                           n_swe_real, repo)
+
+    # ---- LiveCodeBench (lcbhard tasks are all "hard", so they are sampled uniformly)
+    src = {t: _lcb_sources()[t] for t in held["impossible_livecodebench"]}
+    assert all(len(s) == 1 for s in src.values()), "ambiguous lcbhard source in held-out set"
+    lcb_imp = _stratified_sample(src, {t: "hard" for t in src}, n_lcb_impossible, rng)
+    with open(LCB_INDEX_PATH) as f:
+        difficulty = {r["question_id"]: r["difficulty"] for r in map(json.loads, f)}
+    imp_src = {src[t][0]: t for t in src}  # source question_id -> lcbhard id
+    picked_src = [src[t][0] for t in lcb_imp]
+    lcb_real = real_subset(picked_src, list(imp_src), held["livecodebench"], n_lcb_real, difficulty)
+
+    subset = {
+        "_README": "Fixed subset of HELDOUT_EVAL_DO_NOT_TRAIN.json for the midpoint eval. "
+        "Evaluation only. See splits.make_heldout_subset.",
+        "seed": SEED,
+        "parent_split_hash": split_file_hash(),
+        "created": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+        "swebench_verified": swe_real,
+        "impossible_swebench": swe_imp,
+        "livecodebench": lcb_real,
+        "impossible_livecodebench": lcb_imp,
+    }
+    for b in BENCHMARKS:
+        assert set(subset[b]) <= set(held[b]), f"{b}: subset not inside held-out split"
+        assert len(set(subset[b])) == len(subset[b]), f"{b}: duplicate IDs"
+    path.write_text(json.dumps(subset, indent=2) + "\n")
+    return {b: len(subset[b]) for b in BENCHMARKS}
+
+
+def subset_ids(benchmark: Benchmark, path: str | Path = SUBSET_PATH) -> list[str]:
+    """IDs for ``benchmark`` from a subset file, checked against the current held-out split."""
+    subset = json.loads(Path(path).read_text())
+    if subset["parent_split_hash"] != split_file_hash():
+        raise ValueError(f"{path} was drawn from a different held-out split file")
+    ids = list(subset[benchmark])
+    if not set(ids) <= set(heldout_ids(benchmark)):
+        raise ValueError(f"{path}: {benchmark} has IDs outside the held-out split")
+    return ids
+
+
 # --------------------------------------------------------------------------- generation
 
 

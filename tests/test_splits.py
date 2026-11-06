@@ -67,3 +67,28 @@ def test_stratified_sample_is_deterministic_and_proportional():
 def test_make_splits_refuses_to_overwrite():
     with pytest.raises(FileExistsError):
         splits.make_splits()
+
+
+def test_heldout_subset_is_seeded_nested_and_stratified(tmp_path):
+    a, b = tmp_path / "a.json", tmp_path / "b.json"
+    sizes = splits.make_heldout_subset(path=a)
+    splits.make_heldout_subset(path=b)
+    sub, again = json.loads(a.read_text()), json.loads(b.read_text())
+    for bench in BENCHMARKS:
+        assert sub[bench] == again[bench]  # deterministic under the fixed seed
+        assert set(splits.subset_ids(bench, a)) <= set(heldout_ids(bench))
+    assert sizes == {"swebench_verified": 20, "impossible_swebench": 25,
+                     "livecodebench": 30, "impossible_livecodebench": 50}
+    # Same 2:1 mix of ImpossibleBench-derived and other problems as the full held-out set,
+    # with the ImpossibleBench-derived part drawn from the impossible subset.
+    swe_imp_part = set(sub["swebench_verified"]) & set(heldout_ids("impossible_swebench"))
+    assert len(swe_imp_part) == 13 and swe_imp_part <= set(sub["impossible_swebench"])
+    sources = json.loads(splits.LCB_SOURCES_PATH.read_text())["matches"]
+    picked_src = {sources[t]["question_id"] for t in sub["impossible_livecodebench"]}
+    assert len(set(sub["livecodebench"]) & picked_src) == 10
+    # Every repo with at least 5 held-out impossible tasks is represented.
+    repos = Counter(splits._swe_repo(i) for i in heldout_ids("impossible_swebench"))
+    picked = {splits._swe_repo(i) for i in sub["impossible_swebench"]}
+    assert {r for r, c in repos.items() if c >= 5} <= picked
+    with pytest.raises(FileExistsError):
+        splits.make_heldout_subset(path=a)

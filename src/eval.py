@@ -33,10 +33,12 @@ from adapter import SUITE_NAMES, SUITES, SuiteName, build_task, load_agent, suit
 from harness_api import Agent
 from splits import (
     IMPOSSIBLE_SPLITS,
+    SUBSET_PATH,
     HeldOutLeakError,
     assert_not_heldout,
     heldout_ids,
     split_file_hash,
+    subset_ids,
     train_ids,
 )
 
@@ -132,18 +134,20 @@ def _metrics_rows(cells: dict[tuple[str, str], dict], base: dict) -> dict[str, d
 # --------------------------------------------------------------------------- evaluate
 
 
-def _run_config(model: str) -> dict:
+def _run_config(model: str, subset: str | Path | None = None) -> dict:
     return {
         "model": model,
+        # Absent from older configs, so None compares equal there (full held-out set).
+        "subset": Path(subset).name if subset else None,
         "suite_settings": suite_settings(),
         "split_file_hash": split_file_hash(),
         "impossiblebench_commit": "d4f9a149db2b9cec0fed7bab01d91c07ee10aca2",
     }
 
 
-def _write_or_check_config(run_dir: Path, model: str) -> None:
+def _write_or_check_config(run_dir: Path, model: str, subset: str | Path | None = None) -> None:
     path = run_dir / "config.json"
-    config = _run_config(model)
+    config = _run_config(model, subset)
     if path.exists():
         old = json.loads(path.read_text())
         diff = [k for k in config if old.get(k) != config[k]]
@@ -207,26 +211,29 @@ def evaluate(
     max_samples: int | None = None,
     max_sandboxes: int | None = None,
     display: str | None = None,
+    subset: str | Path | None = None,
 ) -> IterationMetrics:
     """Evaluate one harness on the held-out set and record metrics for ``iteration``.
 
     harness: an Agent, a harness .py file, or a directory containing harness.py.
     limit: debugging only; rows are marked ``partial`` and skipped by default in plots.
     sandbox: override the sandbox type for the LiveCodeBench suites (e.g. "local").
+    subset: a file from ``splits.make_heldout_subset``; evaluates only its IDs. Fixed per run_dir.
     """
     from inspect_ai import eval as inspect_eval
 
     run_dir = Path(run_dir)
     agent, default_id = load_agent(harness)
     harness_id = harness_id or default_id
-    _write_or_check_config(run_dir, model)
+    _write_or_check_config(run_dir, model, subset)
     iter_dir = run_dir / "eval" / f"iter_{iteration:03d}"
     if (iter_dir / "metrics.json").exists():
         raise FileExistsError(f"{iter_dir} already has metrics; refusing to evaluate it twice.")
     _warn_platform(suites)
 
     def ids_for(suite: str) -> list[str]:
-        ids = heldout_ids(SUITES[suite].split_key)
+        key = SUITES[suite].split_key
+        ids = subset_ids(key, subset) if subset else heldout_ids(key)
         return ids[:limit] if limit else ids
 
     tasks = _build_tasks(agent, suites, impossible_splits, ids_for, sandbox)
@@ -254,6 +261,7 @@ def evaluate(
         "harness_name": agent.name,
         "model": model,
         "partial": bool(limit),
+        "subset": Path(subset).name if subset else None,
         "wall_clock_s": wall,
         "timestamp": _now(),
     }
@@ -532,9 +540,18 @@ def _cmd_run(args) -> None:
     m = evaluate(
         args.harness, args.iteration, args.run_dir, args.model, suites=args.suites,
         impossible_splits=args.splits, limit=args.limit, sandbox=args.sandbox,
-        max_samples=args.max_samples, max_sandboxes=args.max_sandboxes,
+        max_samples=args.max_samples, max_sandboxes=args.max_sandboxes, subset=args.subset,
     )
     print(json.dumps(m.rows, indent=2))
+
+
+def _cmd_make_subset(args) -> None:
+    from splits import make_heldout_subset
+
+    sizes = make_heldout_subset(args.swe_impossible, args.swe_real, args.lcb_impossible,
+                                args.lcb_real, path=Path(args.out), force=args.force)
+    print(json.dumps(sizes, indent=2))
+    print(f"Wrote {args.out}. Commit it so every evaluation uses the same tasks.")
 
 
 def _cmd_check(args) -> None:
@@ -557,6 +574,15 @@ def main(argv: Sequence[str] | None = None) -> None:
     s.add_argument("--force", action="store_true", help="overwrite existing splits")
     s.set_defaults(fn=_cmd_make_splits)
 
+    s = sub.add_parser("make-subset", help="write a fixed seeded subset of the held-out split")
+    s.add_argument("--swe-impossible", type=int, default=25)
+    s.add_argument("--swe-real", type=int, default=20)
+    s.add_argument("--lcb-impossible", type=int, default=50)
+    s.add_argument("--lcb-real", type=int, default=30)
+    s.add_argument("--out", default=str(SUBSET_PATH))
+    s.add_argument("--force", action="store_true")
+    s.set_defaults(fn=_cmd_make_subset)
+
     s = sub.add_parser("prepare-lcb", help="cache LiveCodeBench tests for scoring")
     s.add_argument("--partition", choices=("heldout", "train", "all"), default="all")
     s.set_defaults(fn=_cmd_prepare_lcb)
@@ -572,6 +598,8 @@ def main(argv: Sequence[str] | None = None) -> None:
     s.add_argument("--run-dir", required=True)
     s.add_argument("--splits", nargs="+", choices=IMPOSSIBLE_SPLITS, default=list(IMPOSSIBLE_SPLITS))
     s.add_argument("--limit", type=int, help="debugging only: first N held-out tasks per suite")
+    s.add_argument("--subset", nargs="?", const=str(SUBSET_PATH),
+                   help=f"evaluate only a held-out subset file (default: {SUBSET_PATH.name})")
     s.add_argument("--max-samples", type=int)
     s.add_argument("--max-sandboxes", type=int)
     common(s)
