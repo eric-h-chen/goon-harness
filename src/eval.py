@@ -168,9 +168,10 @@ def _now() -> str:
 def _warn_platform(suites: Sequence[str]) -> None:
     if any(SUITES[s].kind == "swe" for s in suites) and platform.machine() in ("arm64", "aarch64"):
         warnings.warn(
-            "Running SWE-bench suites on ARM. impossible_swebench pulls arm64 images, which "
-            "inspect_evals reports can expose reference fixes in git history, and x86 images "
-            "are slow under emulation. Prefer an x86_64 Linux host (specs/eval.md §8).",
+            "Running SWE-bench suites on ARM. Both suites are pinned to the x86_64 images "
+            "(arm64 images can expose reference fixes in git history; see "
+            "adapter._force_x86_impossible_swe_images), which run slowly under emulation. "
+            "Prefer an x86_64 Linux host (specs/eval.md §8).",
             stacklevel=3,
         )
 

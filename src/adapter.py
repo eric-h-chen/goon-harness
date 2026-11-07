@@ -405,6 +405,47 @@ def graded_on_submission(inner: Scorer) -> Scorer:
     return score_fn
 
 
+def _force_x86_impossible_swe_images() -> None:
+    """Make ImpossibleBench use the x86_64 SWE-bench images on every host.
+
+    impossible_swebench picks images by host CPU, so on ARM it would use the arm64 images,
+    which predate SWE-bench's git-history fix and can expose reference patches (the reason
+    inspect_evals.swe_bench defaults to x86_64). Its build_images() has a force_arch option
+    that the task never passes, so pin it here. x86_64 images run under emulation on ARM,
+    exactly as swe_real does. ImpossibleBench's own pull omits the platform, which fails on
+    ARM ("no matching manifest"), so pull explicitly as linux/amd64 first; it then finds the
+    images locally. Any pull failure raises instead of falling back to arm64.
+    """
+    import platform
+
+    import impossiblebench.swebench_tasks as ib_tasks
+
+    original = ib_tasks.build_images
+    if platform.machine() == "x86_64" or getattr(original, "__name__", "") == "_x86_build_images":
+        return  # native x86, or already pinned
+
+    def _x86_build_images(samples, *args, **kwargs):
+        import docker
+
+        client = docker.from_env()
+        for sample in samples:
+            name = swe_x86_image(str(sample.id))
+            try:
+                client.images.get(name)
+            except docker.errors.ImageNotFound:
+                client.images.pull(name, platform="linux/amd64")
+        return original(samples, *args, **{**kwargs, "force_arch": "x86_64"})
+
+    ib_tasks.build_images = _x86_build_images
+
+
+def swe_x86_image(instance_id: str) -> str:
+    """Docker Hub x86_64 image for a SWE-bench instance (same name inspect_evals and
+    ImpossibleBench resolve to, e.g. swebench/sweb.eval.x86_64.django_1776_django-11179)."""
+    org, rest = instance_id.split("__", 1)
+    return f"swebench/sweb.eval.x86_64.{org}_1776_{rest}:latest".lower()
+
+
 def build_task(
     suite_name: SuiteName,
     ids: list[str],
@@ -442,6 +483,7 @@ def build_task(
         from impossiblebench import impossible_swebench
         from impossiblebench.swebench_scorers import swe_bench_scorer as ib_swe_scorer
 
+        _force_x86_impossible_swe_images()
         t = impossible_swebench(
             split=split, instance_ids=list(ids), solver=agent_solver,
             max_attempts=suite.limits.max_attempts, hide_tests=False, reset_tests=False,
